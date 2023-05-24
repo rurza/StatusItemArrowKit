@@ -15,14 +15,7 @@ struct ArrowView: View {
                 let lineWidth = round(proxy.size.width * 0.05)
                 ZStack {
                     ArrowPath(radius: radius)
-                        .fill(.linearGradient(
-                            stops: [
-                                .init(color: .accentColor, location: 0),
-                                .init(color: .blue, location: 0.5)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
+                        .fill(Color.accentColor)
                     ArrowPath(radius: radius)
                         .stroke(
                             .white,
@@ -62,14 +55,16 @@ struct ArrowPath: Shape {
             )
             path.addLine(to: CGPoint(x: 0, y: height * 0.24))
 
-            path.addLine(to: CGPoint(x: width / 2, y: 0))
-
-            path.addLine(to: CGPoint(x: width, y: height * 0.24))
-            path.addArc(
-                tangent1End: CGPoint(x: width + radius, y: height * 0.24),
-                tangent2End: CGPoint(x: width, y: height * 0.24 + radius),
-                radius: radius
+            path.addQuadCurve(
+                to: CGPoint(x: width / 2, y: 0),
+                control: CGPoint(x: 0, y: height * 0.24 - radius)
             )
+
+            path.addQuadCurve(
+                to: CGPoint(x: width, y: height * 0.24),
+                control: CGPoint(x: width, y: height * 0.24 - radius)
+            )
+
             path.addLine(to: CGPoint(x: width, y: height - radius))
 
             path.addArc(
