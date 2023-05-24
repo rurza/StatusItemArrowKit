@@ -9,7 +9,10 @@ import Cocoa
 import SwiftUI
 
 public class ArrowWindow: NSWindow {
-    public convenience init(arrowSize: NSSize, statusItem: NSStatusItem) {
+    private weak var statusItem: NSStatusItem?
+    private let arrowSize: NSSize
+
+    public init(arrowSize: NSSize, statusItem: NSStatusItem) {
         let vc = NSHostingController(
             rootView: ArrowView()
                 .shadow(color: .black.opacity(0.25), radius: arrowSize.width * 0.3, x: 0, y: arrowSize.width * 0.2)
@@ -17,13 +20,13 @@ public class ArrowWindow: NSWindow {
                 .padding(arrowSize.width)
         )
         vc.view.wantsLayer = true
-
-        if #available(macOS 13.0, *) {
-            vc.sizingOptions = [.preferredContentSize]
-        }
-        self.init(contentViewController: vc)
+        self.arrowSize = arrowSize
+        let contentRect = NSRect(origin: .zero, size: vc.view.fittingSize)
+        super.init(contentRect: contentRect, styleMask: [.borderless], backing: .buffered, defer: false)
+        self.contentViewController = vc
         styleMask = [.borderless]
         isMovableByWindowBackground = false
+
         isMovable = false
         acceptsMouseMovedEvents = false
         isOpaque = false
@@ -35,8 +38,10 @@ public class ArrowWindow: NSWindow {
         level = .statusBar
         collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .fullScreenNone, .stationary]
         isExcludedFromWindowsMenu = true
-        if let button = statusItem.button, let window = button.window {
-            setFrameOrigin(NSPoint(x: window.frame.maxX - arrowSize.width * 2, y: window.frame.minY + arrowSize.width))
+        self.statusItem = statusItem
+        updateOrigin()
+        if let window = statusItem.button?.window {
+            NotificationCenter.default.addObserver(self, selector: #selector(statusItemWindowDidMove(_:)), name: NSWindow.didMoveNotification, object: window)
         }
     }
 
@@ -47,5 +52,17 @@ public class ArrowWindow: NSWindow {
             context.duration = 0.4
             animator().alphaValue = 1
         }
+    }
+
+    func updateOrigin() {
+        if let button = statusItem?.button, let window = button.window {
+            animator().setFrameTopLeftPoint(NSPoint(x: window.frame.maxX - arrowSize.width * 2, y: window.frame.minY + arrowSize.width))
+        }
+    }
+
+    @objc
+    func statusItemWindowDidMove(_ note: Notification) {
+        guard let window = note.object as? NSWindow, window === statusItem?.button?.window else { return }
+        updateOrigin()
     }
 }

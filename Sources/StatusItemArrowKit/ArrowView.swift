@@ -12,7 +12,7 @@ struct ArrowView: View {
         TimelineView(.animation(minimumInterval: 0.8)) { context in
             GeometryReader { proxy in
                 let radius = round(proxy.size.width * 0.2)
-                let lineWidth = round(proxy.size.width * 0.05)
+                let lineWidth = round(proxy.size.width * 0.08)
                 ZStack {
                     ArrowPath(radius: radius)
                         .fill(Color.accentColor)
@@ -25,11 +25,11 @@ struct ArrowView: View {
                                 lineJoin: .round
                             )
                         )
-                        .padding(lineWidth / 2 - 1)
+                        .padding(lineWidth / 2 - 2)
                 }
             }
             .offset(
-                x: CGFloat(Int.random(in: -3...3)),
+                x: CGFloat(Int.random(in: -2...2)),
                 y: CGFloat(Int.random(in: -2...2))
             )
             .animation(.easeInOut(duration: 1), value: context.date)
@@ -57,12 +57,12 @@ struct ArrowPath: Shape {
 
             path.addQuadCurve(
                 to: CGPoint(x: width / 2, y: 0),
-                control: CGPoint(x: 0, y: height * 0.24 - radius)
+                control: CGPoint(x: 0, y: height * 0.18)
             )
 
             path.addQuadCurve(
                 to: CGPoint(x: width, y: height * 0.24),
-                control: CGPoint(x: width, y: height * 0.24 - radius)
+                control: CGPoint(x: width, y: height * 0.18)
             )
 
             path.addLine(to: CGPoint(x: width, y: height - radius))
@@ -84,7 +84,7 @@ struct ArrowPath: Shape {
 struct SwiftUIView_Previews: PreviewProvider {
     static var previews: some View {
         ArrowView()
-            .frame(width: 140, height: 400)
+            .frame(width: 40, height: 120)
             .padding(40)
             .background(.yellow)
     }
