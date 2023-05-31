@@ -56,7 +56,9 @@ public class ArrowWindow: NSWindow {
 
     func updateOrigin() {
         if let button = statusItem?.button, let window = button.window {
-            animator().setFrameTopLeftPoint(NSPoint(x: window.frame.maxX - arrowSize.width * 2, y: window.frame.minY + arrowSize.width))
+            // arrowSize.width * 1.5 because the width of the entire view is arrowSize.width * 3 (there is padding)
+            let point = NSPoint(x: window.frame.midX - arrowSize.width * 1.5, y: window.frame.minY + arrowSize.width)
+            animator().setFrameTopLeftPoint(point)
         }
     }
 
@@ -64,5 +66,15 @@ public class ArrowWindow: NSWindow {
     func statusItemWindowDidMove(_ note: Notification) {
         guard let window = note.object as? NSWindow, window === statusItem?.button?.window else { return }
         updateOrigin()
+    }
+
+    public override func close() {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.4
+            animator().alphaValue = 0
+        } completionHandler: {
+            super.close()
+        }
+
     }
 }
