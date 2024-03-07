@@ -12,9 +12,9 @@ public class ArrowWindow: NSWindow {
     private weak var statusItem: NSStatusItem?
     private let arrowSize: NSSize
 
-    public init(arrowSize: NSSize, statusItem: NSStatusItem) {
+    public init(arrowSize: NSSize, statusItem: NSStatusItem, color: NSColor = .controlAccentColor) {
         let vc = NSHostingController(
-            rootView: ArrowView()
+            rootView: ArrowView(color: Color(nsColor: color))
                 .shadow(color: .black.opacity(0.25), radius: arrowSize.width * 0.3, x: 0, y: arrowSize.width * 0.2)
                 .frame(width: arrowSize.width, height: arrowSize.height)
                 .padding(arrowSize.width)

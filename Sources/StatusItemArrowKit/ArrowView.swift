@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ArrowView: View {
+    let color: Color
+
     var body: some View {
         TimelineView(.animation(minimumInterval: 0.8)) { context in
             GeometryReader { proxy in
@@ -15,7 +17,7 @@ struct ArrowView: View {
                 let lineWidth = round(proxy.size.width * 0.08)
                 ZStack {
                     ArrowPath(radius: radius)
-                        .fill(Color.accentColor)
+                        .fill(color)
                     ArrowPath(radius: radius)
                         .stroke(
                             .white,
@@ -83,7 +85,7 @@ struct ArrowPath: Shape {
 
 struct SwiftUIView_Previews: PreviewProvider {
     static var previews: some View {
-        ArrowView()
+        ArrowView(color: .red)
             .frame(width: 40, height: 120)
             .padding(40)
             .background(.yellow)
