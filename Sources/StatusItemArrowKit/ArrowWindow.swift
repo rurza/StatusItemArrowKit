@@ -39,7 +39,6 @@ public class ArrowWindow: NSWindow {
         collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .fullScreenNone, .stationary]
         isExcludedFromWindowsMenu = true
         self.statusItem = statusItem
-        updateOrigin()
         if let window = statusItem.button?.window {
             NotificationCenter.default.addObserver(self, selector: #selector(statusItemWindowDidMove(_:)), name: NSWindow.didMoveNotification, object: window)
         }
@@ -58,7 +57,7 @@ public class ArrowWindow: NSWindow {
         if let button = statusItem?.button, let window = button.window {
             // arrowSize.width * 1.5 because the width of the entire view is arrowSize.width * 3 (there is padding)
             let point = NSPoint(x: window.frame.midX - arrowSize.width * 1.5, y: window.frame.minY + arrowSize.width)
-            animator().setFrameTopLeftPoint(point)
+            setFrameTopLeftPoint(point)
         }
     }
 
