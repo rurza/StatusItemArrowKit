@@ -39,6 +39,7 @@ public class ArrowWindow: NSWindow {
         collectionBehavior = [.canJoinAllSpaces, .ignoresCycle, .fullScreenNone, .stationary]
         isExcludedFromWindowsMenu = true
         self.statusItem = statusItem
+        updateOrigin()
         if let window = statusItem.button?.window {
             NotificationCenter.default.addObserver(self, selector: #selector(statusItemWindowDidMove(_:)), name: NSWindow.didMoveNotification, object: window)
         }
